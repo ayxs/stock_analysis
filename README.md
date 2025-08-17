@@ -13,6 +13,8 @@ This project provides a Streamlit-based application to track groups of selected 
 ## Usage
 1. Install dependencies:
    ```bash
+   pip install streamlit akshare pandas
+   # or use the requirements file
    pip install -r requirements.txt
    ```
 2. Run the Streamlit app:
