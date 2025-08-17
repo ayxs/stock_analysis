@@ -31,8 +31,17 @@ def normalize_symbol(symbol: str) -> str:
 def fetch_history(symbol: str, start_date: str) -> pd.DataFrame:
     start = start_date.replace("-", "")
     end = datetime.now().strftime("%Y%m%d")
-    df = ak.stock_zh_a_hist(symbol=symbol, period="daily", start_date=start, end_date=end, adjust="qfq")
-    df.rename(columns={"日期": "date", "收盘": "close"}, inplace=True)
+    df = ak.stock_zh_a_hist(
+        symbol=symbol, period="daily", start_date=start, end_date=end, adjust="qfq"
+    )
+    if df is None or df.empty:
+        return pd.DataFrame(columns=["date", "close"])
+    if "日期" in df.columns:
+        df.rename(columns={"日期": "date"}, inplace=True)
+    if "收盘" in df.columns:
+        df.rename(columns={"收盘": "close"}, inplace=True)
+    if "date" not in df.columns or "close" not in df.columns:
+        return pd.DataFrame(columns=["date", "close"])
     df["date"] = pd.to_datetime(df["date"])
     return df[["date", "close"]]
 
